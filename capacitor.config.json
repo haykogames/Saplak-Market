@@ -1,0 +1,12 @@
+{
+  "appId": "com.haykogames.saplakmarket",
+  "appName": "Şaplak Market",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#121a28",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": { "launchShowDuration": 0 }
+  }
+}

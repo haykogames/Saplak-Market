@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Şaplak Market</string>
+    <string name="title_activity_main">Şaplak Market</string>
+    <string name="package_name">com.haykogames.saplakmarket</string>
+    <string name="custom_url_scheme">com.haykogames.saplakmarket</string>
+    <!-- DEGISTIR: AdMob > Uygulamalar > Saplak Market > Uygulama ayarlari icindeki ~ isaretli kimlik.
+         Simdilik Google'in resmi ornek (test) uygulama kimligi duruyor. -->
+    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+</resources>

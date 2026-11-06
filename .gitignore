@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+*.log
+# Imza anahtarlari ASLA depoya girmez
+*.jks
+*.keystore
+*.p12
+keystore.properties
