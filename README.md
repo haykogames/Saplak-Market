@@ -53,7 +53,7 @@ Google Play sadece imzalı paket kabul eder. Anahtarı **sen** oluşturursun, de
 
 Reklam birimleri `www/index.html` içinde `const ADS=` satırında:
 
-- Ödüllü, Geçiş ve Banner kimlikleri yazılı.
+- Ödüllü, Geçiş ve Banner kimlikleri yazılı. Banner oynanışı bozduğu için kapalı (kod içinde `bannerTick`).
 - **Uygulama açıkken** kimliği boş; AdMob'da oluşturup `appOpen` alanına yaz.
 - `test:false`: gerçek reklamlar gösterilir. Geliştirme sırasında deneme reklamı istersen `test:true` yap.
 

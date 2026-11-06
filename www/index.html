@@ -233,6 +233,8 @@ h1{font-family:var(--display);font-size:38px;line-height:.95;margin:8px 0 4px;te
 .adbanner{position:fixed;left:0;right:0;bottom:0;height:56px;padding-bottom:env(safe-area-inset-bottom,0px);background:#f4f4f4;border-top:1px solid #ccc;color:#555;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 12px var(--mono);z-index:58;pointer-events:none}
 .adbanner small{font-weight:400;font-size:10px;opacity:.7}
 body.hasBanner .menu-bottom{padding-bottom:62px}body.hasBanner #over .receipt{margin-bottom:60px}
+.buyad{display:block;width:100%;margin:-2px 0 2px;padding:9px 8px;border:2px dashed var(--tag);border-radius:4px;background:rgba(255,210,63,.12);color:var(--tag);font:800 13px var(--mono);letter-spacing:.06em;cursor:pointer}
+.buyad small{display:block;font-weight:400;font-size:10px;opacity:.8;letter-spacing:.04em}
 .setlist{display:grid;gap:8px;margin-top:6px}
 .sbtn{font:700 13px var(--mono);letter-spacing:.06em;padding:12px 10px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:3px;cursor:pointer;text-align:left}
 .sbtn:disabled{opacity:.4}
@@ -298,6 +300,7 @@ body.hasBanner .menu-bottom{padding-bottom:62px}body.hasBanner #over .receipt{ma
     </div>
     <div class="menu-bottom">
       <button class="go" id="btnStart" type="button">OYNA</button>
+      <button class="buyad" id="btnBuyMenu" type="button">✦ REKLAMSIZ OYNA ✦ <small>tüm reklamları kaldır</small></button>
       <div class="menu-row"><button class="ghost hot" id="btnMap" type="button">ŞUBELER</button><button class="ghost" id="btnShop" type="button">DOLAP</button></div>
       <div class="menu-row"><button class="ghost" id="btnSeason" type="button">SEZON</button><button class="ghost" id="btnTour" type="button">TURNUVA</button></div>
       <div class="menu-row"><button class="ghost" id="btnModes" type="button">MODLAR</button><button class="ghost" id="btnLB" type="button">SKORLAR</button></div>
@@ -564,8 +567,8 @@ body.hasBanner .menu-bottom{padding-bottom:62px}body.hasBanner #over .receipt{ma
       <h1 style="font-size:26px">REKLAMSIZ OYNA</h1>
       <div class="row"><span>Açılış reklamı</span><b>YOK</b></div>
       <div class="row"><span>Oyun sonu geçiş reklamı</span><b>YOK</b></div>
-      <div class="row"><span>Menü bannerı</span><b>YOK</b></div>
-      <div class="row"><span>Ödüllü reklamlar</span><b>İSTERSEN</b></div>
+      <div class="row"><span>Devam et, 2 kat kazanç, bedava kutu ve güç</span><b>REKLAMSIZ</b></div>
+      <div class="row"><span>Tek seferlik ödeme</span><b>SONSUZA DEK</b></div>
       <p class="lbmsg" id="noAdsPrice"></p>
       <button class="go" id="btnNoAdsBuy" type="button">SATIN AL</button>
       <button class="ghost dk" id="btnNoAdsRestore" type="button">SATIN ALIMI GERİ YÜKLE</button>
@@ -2731,7 +2734,7 @@ const ADS={test:false,interstitialEvery:2,removeAdsProduct:'reklamsiz',
 let adBusy=false,adInited=false,adDoubleUsed=false,adReviveUsed=false,adBoostUsed=false;
 function adUnit(){const ios=/iPad|iPhone|iPod/.test(navigator.userAgent);return ios?ADS.rewarded.ios:ADS.rewarded.android}
 function adProvider(){const C=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.AdMob;if(C)return'capacitor';if(window.admob&&window.admob.RewardedAd)return'admobplus';if(typeof window.adBreak==='function')return'h5';return'demo'}
-async function showRewarded(){if(adBusy)return false;adBusy=true;const wasMuted=muted;try{if(AC&&AC.state==='running')await AC.suspend()}catch(e){}
+async function showRewarded(){if(SAVE.noAds){toast('Reklamsız sürüm: ödül hemen verildi');return true}if(adBusy)return false;adBusy=true;const wasMuted=muted;try{if(AC&&AC.state==='running')await AC.suspend()}catch(e){}
   let ok=false;try{const pv=adProvider();
     if(pv==='capacitor'){const A=window.Capacitor.Plugins.AdMob;if(!adInited){await A.initialize({initializeForTesting:ADS.test});adInited=true}await A.prepareRewardVideoAd({adId:adUnit(),isTesting:ADS.test});const r=await A.showRewardVideoAd();ok=!!r}
     else if(pv==='admobplus'){const ad=new window.admob.RewardedAd({adUnitId:adUnit()});await ad.load();ok=await new Promise(res=>{let got=false;const onR=()=>{got=true};const onD=()=>{document.removeEventListener('admob.rewarded.reward',onR);res(got)};document.addEventListener('admob.rewarded.reward',onR);document.addEventListener('admob.rewarded.dismiss',onD,{once:true});ad.show().catch(()=>res(false))})}
@@ -2741,7 +2744,7 @@ async function showRewarded(){if(adBusy)return false;adBusy=true;const wasMuted=
 function demoAd(){return new Promise(res=>{const o=$('adDemo');o.hidden=false;let n=5;const b=$('btnAdClaim'),x=$('btnAdSkip');b.disabled=true;b.textContent='ÖDÜL '+n+' SN SONRA';
   const iv=setInterval(()=>{n--;$('adBar').style.width=((5-n)/5*100)+'%';if(n>0)b.textContent='ÖDÜL '+n+' SN SONRA';else{clearInterval(iv);b.disabled=false;b.textContent='ÖDÜLÜ AL'}},1000);$('adBar').style.width='0%';
   const done=v=>{clearInterval(iv);o.hidden=true;b.onclick=x.onclick=null;res(v)};b.onclick=()=>done(true);x.onclick=()=>done(false)})}
-function adOverButtons(){const win=mapRun&&mapRun.win;$('btnAdDouble').hidden=adDoubleUsed||lastEarn<30;$('btnAdDouble').textContent='▶ REKLAM İZLE · KAZANCI 2 KAT YAP (+'+fmt(Math.min(lastEarn,1500))+')';$('btnAdRevive').hidden=adReviveUsed||win}
+function adOverButtons(){const win=mapRun&&mapRun.win;$('btnAdDouble').hidden=adDoubleUsed||lastEarn<30;$('btnAdDouble').textContent=(SAVE.noAds?'★ ':'▶ REKLAM İZLE · ')+'KAZANCI 2 KAT YAP (+'+fmt(Math.min(lastEarn,1500))+')';$('btnAdRevive').hidden=adReviveUsed||win}
 async function adDouble(){if(adDoubleUsed)return;const ok=await showRewarded();if(!ok)return;adDoubleUsed=true;const g=Math.min(lastEarn,1500);SAVE.wallet+=g;persist();lastEarn+=g;$('oWallet').textContent='+'+fmt(lastEarn+(bonusWon||0));sfx.coin();setTimeout(()=>sfx.power(),140);toast('KAZANÇ 2 KATINA ÇIKTI! +'+fmt(g));adOverButtons();updateMenuInfo()}
 async function adRevive(){if(adReviveUsed||state!=='over')return;const ok=await showRewarded();if(!ok)return;adReviveUsed=true;
   SAVE.wallet=Math.max(0,SAVE.wallet-lastEarn);persist();state='play';paused=false;heat=0;calm=0;invul=3;stun=0;catchT=0;guardZ=16;guardSlip=1.5;
@@ -2975,7 +2978,7 @@ async function setBanner(want){want=want&&!SAVE.noAds;if(want===bannerOn)return;
       if(want){if(!bannerObj){await A.showBanner({adId:id,adSize:'ADAPTIVE_BANNER',position:'BOTTOM_CENTER',margin:0,isTesting:ADS.test});bannerObj=true}else await A.resumeBanner()}else if(bannerObj)await A.hideBanner()}
     else if(pv==='admobplus'&&id){if(!bannerObj)bannerObj=new window.admob.BannerAd({adUnitId:id,position:'bottom'});want?await bannerObj.show():await bannerObj.hide()}
     else if(pv==='demo'||pv==='h5'){$('adBanner').hidden=!want}}catch(e){}}
-function bannerTick(){const want=(state==='menu'||state==='over')&&!adBusy&&$('story').hidden&&$('adDemo').hidden&&$('adInter').hidden;setBanner(want)}
+function bannerTick(){/* banner kaldirildi: oynanisi bozuyordu */if(bannerOn)setBanner(false)}
 function interAfterOver(){overCount++;if(SAVE.noAds||overCount%ADS.interstitialEvery!==0)return;setTimeout(()=>{if(state==='over'&&$('bonus').hidden)showInterstitial()},900)}
 // ---- remove-ads purchase (Google Play Billing through cordova-plugin-purchase in the app build) ----
 function iapStore(){return window.CdvPurchase&&window.CdvPurchase.store}
@@ -2985,13 +2988,13 @@ function iapInit(){const C=window.CdvPurchase;if(!C||iapReady)return;const store
     store.initialize([C.Platform.GOOGLE_PLAY]).then(()=>iapCheck())}catch(e){iapReady=false}}
 function iapCheck(){const st=iapStore();if(!st)return;try{iapProduct=st.get(ADS.removeAdsProduct);if(iapProduct&&(iapProduct.owned||st.owned(ADS.removeAdsProduct)))grantNoAds(false);renderNoAds()}catch(e){}}
 function grantNoAds(fresh){if(SAVE.noAds){renderNoAds();return}SAVE.noAds=true;persist();setBanner(false);document.body.classList.remove('hasBanner');if(fresh){award('reklamsiz');sfx.power();toast('REKLAMLAR KALDIRILDI! Teşekkürler');}renderNoAds()}
-function renderNoAds(){const b=$('btnNoAds');if(b)b.textContent=SAVE.noAds?'REKLAMSIZ SÜRÜM ✓':'REKLAMLARI KALDIR';const p=$('noAdsPrice');if(!p)return;
+function renderNoAds(){const b=$('btnNoAds');if(b)b.textContent=SAVE.noAds?'REKLAMSIZ SÜRÜM ✓':'REKLAMLARI KALDIR';const mb=$('btnBuyMenu');if(mb)mb.hidden=SAVE.noAds;const p=$('noAdsPrice');if(!p)return;
   const price=iapProduct&&iapProduct.pricing&&iapProduct.pricing.price;$('btnNoAdsBuy').textContent=SAVE.noAds?'SATIN ALINDI ✓':price?'SATIN AL · '+price:'SATIN AL';$('btnNoAdsBuy').disabled=SAVE.noAds;
-  p.textContent=SAVE.noAds?'Reklamsız sürüm sende. Ödüllü reklamlar isteğe bağlı olarak durmaya devam eder.':iapStore()?'Tek seferlik ödeme, Google Play ile.':'Satın alma sadece Android uygulamasında, Google Play üzerinden yapılabilir.'}
+  p.textContent=SAVE.noAds?'Reklamsız sürüm sende. Hiç reklam yok, reklamlı ödüller de reklamsız veriliyor.':iapStore()?'Tek seferlik ödeme, Google Play ile.':'Satın alma sadece Android uygulamasında, Google Play üzerinden yapılabilir.'}
 async function buyNoAds(){if(SAVE.noAds)return;const st=iapStore();if(!st){toast('Satın alma sadece uygulamada yapılabilir');return}
   try{const p=st.get(ADS.removeAdsProduct);const off=p&&p.getOffer();if(!off){toast('Ürün şu an yüklenemedi, biraz sonra dene');return}const err=await off.order();if(err&&err.message)toast('Satın alma tamamlanmadı')}catch(e){toast('Satın alma tamamlanmadı')}}
 async function restoreNoAds(){const st=iapStore();if(!st){toast('Geri yükleme sadece uygulamada yapılabilir');return}try{await st.restorePurchases();iapCheck();toast(SAVE.noAds?'Reklamsız sürüm geri yüklendi':'Bu hesapta satın alma bulunamadı')}catch(e){toast('Geri yükleme yapılamadı')}}
-function openNoAds(){renderNoAds();$('settings').hidden=true;$('start').hidden=true;$('noads').hidden=false}
+let noAdsFrom='settings';function openNoAds(from){noAdsFrom=from==='menu'?'start':'settings';renderNoAds();$('settings').hidden=true;$('start').hidden=true;$('noads').hidden=false}
 document.addEventListener('deviceready',iapInit,false);setTimeout(iapInit,1500);
 (async()=>{try{const A=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.AdMob;if(!A)return;await A.initialize({initializeForTesting:ADS.test});adInited=true;const ci=await A.requestConsentInfo();if(ci&&ci.isConsentFormAvailable&&ci.status==='REQUIRED')await A.showConsentForm()}catch(e){}})();
 
@@ -3257,7 +3260,7 @@ $('btnModes').onclick=()=>{initAudio();$('start').hidden=true;$('modes').hidden=
 $('btnGuardMode').onclick=()=>startMode('guard');$('btnDuoMode').onclick=()=>startMode('duo');
 $('btnSeason').onclick=()=>{initAudio();renderSeason();$('start').hidden=true;$('season').hidden=false};$('btnSeasonClose').onclick=()=>{$('season').hidden=true;$('start').hidden=false;updateSeasonDot()};
 $('btnTour').onclick=()=>{initAudio();tourSubscribe();renderTour();$('start').hidden=true;$('tour').hidden=false};$('btnTourClose').onclick=()=>{$('tour').hidden=true;$('start').hidden=false};$('btnTourGo').onclick=()=>startMode('tour');
-$('btnNoAds').onclick=openNoAds;$('btnNoAdsBuy').onclick=buyNoAds;$('btnNoAdsRestore').onclick=restoreNoAds;$('btnNoAdsClose').onclick=()=>{$('noads').hidden=true;$('settings').hidden=false};renderNoAds();
+$('btnNoAds').onclick=openNoAds;$('btnNoAdsBuy').onclick=buyNoAds;$('btnNoAdsRestore').onclick=restoreNoAds;$('btnNoAdsClose').onclick=()=>{$('noads').hidden=true;$(noAdsFrom).hidden=false};$('btnBuyMenu').onclick=()=>{initAudio();openNoAds('menu')};renderNoAds();
 $('btnShop').onclick=openShop;$('btnShopClose').onclick=closeShop;$('shop').addEventListener('click',shopClick);
 function musicLabel(){$('btnMusic').textContent=musicOn?'MÜZİK: AÇIK':'MÜZİK: KAPALI'}musicLabel();
 $('btnMusic').onclick=()=>{initAudio();startMusic();musicOn=!musicOn;SAVE.music=musicOn;persist();musicLabel();updateAudio()};
