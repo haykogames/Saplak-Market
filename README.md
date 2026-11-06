@@ -55,7 +55,7 @@ Reklam birimleri `www/index.html` içinde `const ADS=` satırında:
 
 - Ödüllü, Geçiş ve Banner kimlikleri yazılı.
 - **Uygulama açıkken** kimliği boş; AdMob'da oluşturup `appOpen` alanına yaz.
-- `test:true` açıkken sadece test reklamı gelir. Telefonda her şey çalışınca `test:false` yap.
+- `test:false`: gerçek reklamlar gösterilir. Geliştirme sırasında deneme reklamı istersen `test:true` yap.
 
 **Uygulama kimliği** (ortasında `~` olan) `android/app/src/main/res/values/strings.xml` içindeki `admob_app_id` satırına yazılır. Şu an orada Google'ın örnek kimliği var; **yayından önce kendi kimliğinle değiştir.**
 
