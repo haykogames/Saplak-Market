@@ -571,7 +571,6 @@ body.hasBanner .menu-bottom{padding-bottom:62px}body.hasBanner #over .receipt{ma
       <div class="row"><span>Tek seferlik ödeme</span><b>SONSUZA DEK</b></div>
       <p class="lbmsg" id="noAdsPrice"></p>
       <button class="go" id="btnNoAdsBuy" type="button">SATIN AL</button>
-      <button class="ghost dk" id="btnNoAdsRestore" type="button">SATIN ALIMI GERİ YÜKLE</button>
       <button class="ghost dk" id="btnNoAdsClose" type="button">KAPAT</button>
     </div>
   </div>
@@ -2989,8 +2988,8 @@ function iapInit(){const C=window.CdvPurchase;if(!C||iapReady)return;const store
 function iapCheck(){const st=iapStore();if(!st)return;try{iapProduct=st.get(ADS.removeAdsProduct);if(iapProduct&&(iapProduct.owned||st.owned(ADS.removeAdsProduct)))grantNoAds(false);renderNoAds()}catch(e){}}
 function grantNoAds(fresh){if(SAVE.noAds){renderNoAds();return}SAVE.noAds=true;persist();setBanner(false);document.body.classList.remove('hasBanner');if(fresh){award('reklamsiz');sfx.power();toast('REKLAMLAR KALDIRILDI! Teşekkürler');}renderNoAds()}
 function renderNoAds(){const b=$('btnNoAds');if(b)b.textContent=SAVE.noAds?'REKLAMSIZ SÜRÜM ✓':'REKLAMLARI KALDIR';const mb=$('btnBuyMenu');if(mb)mb.hidden=SAVE.noAds;const p=$('noAdsPrice');if(!p)return;
-  const price=iapProduct&&iapProduct.pricing&&iapProduct.pricing.price;$('btnNoAdsBuy').textContent=SAVE.noAds?'SATIN ALINDI ✓':price?'SATIN AL · '+price:'SATIN AL';$('btnNoAdsBuy').disabled=SAVE.noAds;
-  p.textContent=SAVE.noAds?'Reklamsız sürüm sende. Hiç reklam yok, reklamlı ödüller de reklamsız veriliyor.':iapStore()?'Tek seferlik ödeme, Google Play ile.':'Satın alma sadece Android uygulamasında, Google Play üzerinden yapılabilir.'}
+  const price=(iapProduct&&iapProduct.pricing&&iapProduct.pricing.price)||'₺200';$('btnNoAdsBuy').textContent=SAVE.noAds?'SATIN ALINDI ✓':'SATIN AL · '+price;$('btnNoAdsBuy').disabled=SAVE.noAds;
+  p.textContent=SAVE.noAds?'Reklamsız sürüm sende. Hiç reklam yok, reklamlı ödüller de reklamsız veriliyor.':iapStore()?'Tek seferlik ödeme, Google Play ile. Uygulamayı silip yeniden kursan da aynı Google hesabında reklamsız kalır.':'Satın alma sadece Android uygulamasında, Google Play üzerinden yapılabilir.'}
 async function buyNoAds(){if(SAVE.noAds)return;const st=iapStore();if(!st){toast('Satın alma sadece uygulamada yapılabilir');return}
   try{const p=st.get(ADS.removeAdsProduct);const off=p&&p.getOffer();if(!off){toast('Ürün şu an yüklenemedi, biraz sonra dene');return}const err=await off.order();if(err&&err.message)toast('Satın alma tamamlanmadı')}catch(e){toast('Satın alma tamamlanmadı')}}
 async function restoreNoAds(){const st=iapStore();if(!st){toast('Geri yükleme sadece uygulamada yapılabilir');return}try{await st.restorePurchases();iapCheck();toast(SAVE.noAds?'Reklamsız sürüm geri yüklendi':'Bu hesapta satın alma bulunamadı')}catch(e){toast('Geri yükleme yapılamadı')}}
@@ -3260,7 +3259,7 @@ $('btnModes').onclick=()=>{initAudio();$('start').hidden=true;$('modes').hidden=
 $('btnGuardMode').onclick=()=>startMode('guard');$('btnDuoMode').onclick=()=>startMode('duo');
 $('btnSeason').onclick=()=>{initAudio();renderSeason();$('start').hidden=true;$('season').hidden=false};$('btnSeasonClose').onclick=()=>{$('season').hidden=true;$('start').hidden=false;updateSeasonDot()};
 $('btnTour').onclick=()=>{initAudio();tourSubscribe();renderTour();$('start').hidden=true;$('tour').hidden=false};$('btnTourClose').onclick=()=>{$('tour').hidden=true;$('start').hidden=false};$('btnTourGo').onclick=()=>startMode('tour');
-$('btnNoAds').onclick=openNoAds;$('btnNoAdsBuy').onclick=buyNoAds;$('btnNoAdsRestore').onclick=restoreNoAds;$('btnNoAdsClose').onclick=()=>{$('noads').hidden=true;$(noAdsFrom).hidden=false};$('btnBuyMenu').onclick=()=>{initAudio();openNoAds('menu')};renderNoAds();
+$('btnNoAds').onclick=openNoAds;$('btnNoAdsBuy').onclick=buyNoAds;$('btnNoAdsClose').onclick=()=>{$('noads').hidden=true;$(noAdsFrom).hidden=false};$('btnBuyMenu').onclick=()=>{initAudio();openNoAds('menu')};renderNoAds();
 $('btnShop').onclick=openShop;$('btnShopClose').onclick=closeShop;$('shop').addEventListener('click',shopClick);
 function musicLabel(){$('btnMusic').textContent=musicOn?'MÜZİK: AÇIK':'MÜZİK: KAPALI'}musicLabel();
 $('btnMusic').onclick=()=>{initAudio();startMusic();musicOn=!musicOn;SAVE.music=musicOn;persist();musicLabel();updateAudio()};

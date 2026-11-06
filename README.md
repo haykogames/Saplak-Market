@@ -65,7 +65,7 @@ AdMob'da **Gizlilik ve mesajlaşma** bölümünden bir GDPR (AB onay) mesajı ol
 
 Oyunda **Ayarlar → Reklamları kaldır** var (Google Play ile tek seferlik ödeme). Çalışması için Play Console'da:
 
-**Para kazanma → Ürünler → Uygulama içi ürünler → Ürün oluştur**: ürün kimliği tam olarak `reklamsiz`, fiyatını belirle, etkinleştir. Bu bölüm ilk AAB yüklendikten sonra açılır. Para ödemeden denemek için **Ayarlar → Lisans testi**'ne kendi Gmail adresini ekle.
+**Para kazanma → Ürünler → Uygulama içi ürünler → Ürün oluştur**: ürün kimliği tam olarak `reklamsiz`, fiyatı ₺200 (oyunda da bu fiyat yazıyor), etkinleştir. Bu bölüm ilk AAB yüklendikten sonra açılır. Para ödemeden denemek için **Ayarlar → Lisans testi**'ne kendi Gmail adresini ekle.
 
 ## 5. Oyunu güncellemek
 
