@@ -6,5 +6,5 @@
     <string name="custom_url_scheme">com.haykogames.saplakmarket</string>
     <!-- DEGISTIR: AdMob > Uygulamalar > Saplak Market > Uygulama ayarlari icindeki ~ isaretli kimlik.
          Simdilik Google'in resmi ornek (test) uygulama kimligi duruyor. -->
-    <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="admob_app_id">ca-app-pub-8775364457894227~8540644966</string>
 </resources>

@@ -57,7 +57,7 @@ Reklam birimleri `www/index.html` içinde `const ADS=` satırında:
 - **Uygulama açıkken** kimliği boş; AdMob'da oluşturup `appOpen` alanına yaz.
 - `test:false`: gerçek reklamlar gösterilir. Geliştirme sırasında deneme reklamı istersen `test:true` yap.
 
-**Uygulama kimliği** (ortasında `~` olan) `android/app/src/main/res/values/strings.xml` içindeki `admob_app_id` satırına yazılır. Şu an orada Google'ın örnek kimliği var; **yayından önce kendi kimliğinle değiştir.**
+**Uygulama kimliği** (ortasında `~` olan) `android/app/src/main/res/values/strings.xml` içindeki `admob_app_id` satırına yazılır. Şu an orada Şaplak Market'in kendi kimliği (`ca-app-pub-8775364457894227~8540644966`) yazılı.
 
 AdMob'da **Gizlilik ve mesajlaşma** bölümünden bir GDPR (AB onay) mesajı oluştur; oyun bu formu gerekli ülkelerde kendisi gösterir.
 

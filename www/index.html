@@ -2122,8 +2122,12 @@ function chime(){tone(1046,.5,'triangle',.07);setTimeout(()=>tone(784,.7,'triang
 function pickVoice(){if(!window.speechSynthesis)return null;const vs=speechSynthesis.getVoices();return vs.find(v=>/^tr(-|_|$)/i.test(v.lang))||null}
 if(window.speechSynthesis){try{speechSynthesis.onvoiceschanged=()=>{trVoice=pickVoice()};trVoice=pickVoice()}catch(e){}}
 function speak(txt){if(muted||state!=='play')return;const now=performance.now();if(now-lastSpeak<2200)return;lastSpeak=now;chime();
-  if(!window.speechSynthesis||!trVoice)return;setTimeout(()=>{try{const u=new SpeechSynthesisUtterance(txt.replace(/^ANONS:\s*/,'').replace(/[←→▲◀▶·✓☑☐]/g,' ').replace(/₺/g,'').replace(/\+/g,'artı '));
-    u.voice=trVoice;u.lang=trVoice.lang;u.rate=1.04;u.pitch=1.0;u.volume=0.85;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}},750)}
+  const clean=txt.replace(/^ANONS:\s*/,'').replace(/[←→▲◀▶·✓☑☐⚠]/g,' ').replace(/₺\s*([\d.]+)/g,'$1 lira').replace(/₺/g,'').replace(/\+/g,'artı ');
+  const TTS=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.TextToSpeech;
+  setTimeout(()=>{try{
+    if(TTS){TTS.stop().catch(()=>{}).then(()=>TTS.speak({text:clean,lang:'tr-TR',rate:1.0,pitch:1.0,volume:1.0,category:'playback'})).catch(()=>{});return}
+    if(!window.speechSynthesis)return;if(!trVoice)trVoice=pickVoice();const u=new SpeechSynthesisUtterance(clean);
+    if(trVoice){u.voice=trVoice;u.lang=trVoice.lang}else u.lang='tr-TR';u.rate=1.04;u.pitch=1.0;u.volume=0.9;speechSynthesis.cancel();speechSynthesis.speak(u)}catch(e){}},750)}
 /* ---------- wardrobe ---------- */
 let shopOpen=false,preview=null;
 function renderShop(){$('shopWallet').textContent=fmt(SAVE.wallet);
